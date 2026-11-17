@@ -36,7 +36,7 @@ function shopHeader(on){
   return `<div class="hdr"><div class="wrap">
     <a href="#/">${LOGO}</a>
     <nav class="nav">
-      <a href="#/" class="${on==='home'?'on':''}">Shop</a>
+      <a href="#/" class="${on==='home'?'on':''}">Home</a>
       <a href="#/catalog" class="${on==='cat'?'on':''}">All products</a>
       <a href="#/design" class="${on==='des'?'on':''}">Design studio</a>
       <a href="#/how" class="${on==='how'?'on':''}">How it works</a>
@@ -47,11 +47,11 @@ function shopHeader(on){
       <a class="btn sm pri" href="#/cart">🛒 Cart (${S.cart.length})</a>
     </div></div></div>`;
 }
-function pcard(p){
+function pcard(p, badge){
   const r = quoteLine(p, 24, [{zone:'ff',method:'sp',colors:1}], markupNow());
-  const c = p.colors[Math.min(1,p.colors.length-1)];
+  const c = heroC(p);
   return `<div class="pcard" onclick="S.pd.id='${p.id}';S.pd.color='${c.key}';S.pd.view='front';S.pd.locs=${p.type==='hat'?"{hf:{method:'emb'}}":"{ff:{method:'sp',colors:1}}"};go('#/product/${p.id}')">
-    <div class="img">${p.popular?'<span class="tag">★ Popular</span>':''}${garment(p.type,c.hex,'front',170)}</div>
+    <div class="img">${badge&&p.popular?'<span class="tag">★ Popular</span>':''}${garment(p.type,c.hex,'front',170)}</div>
     <div class="body"><div class="small muted">${p.brand} ${p.style}</div><div class="name">${p.name}</div>
       <div class="dots">${p.colors.slice(0,8).map(c=>`<i style="background:${c.hex}" title="${c.name}"></i>`).join('')}${p.colors.length>8?`<span class="tiny muted">+${p.colors.length-8}</span>`:''}</div>
       <div class="from">${p.type==='hat'?'Embroidered from ':'From '}${money(p.type==='hat'?quoteLine(p,24,[{zone:'hf',method:'emb'}],markupNow()).unit:r.unit)} <span class="tiny muted" style="font-weight:500">ea. at 24+, 1-color print</span></div>
@@ -68,7 +68,7 @@ function home(){
       <p>Pick a product, add your logo, and see your real price before you order. Upload your art, design it yourself, or have our team design it for you.</p>
       <div class="ctas"><a class="btn gold" href="#/catalog">Start shopping</a><a class="btn" href="#/product/g5000">Get an instant quote</a></div>
     </div>
-    <div class="art">${garment('hoodie','#1f2a52','front',230)}<div style="margin-left:-60px;margin-top:60px">${garment('tee','#FFD23C','front',200)}</div></div>
+    <div class="art">${garment('hoodie','#fafafa','front',230)}<div style="margin-left:-60px;margin-top:60px">${garment('tee','#FFD23C','front',200)}</div></div>
   </div></section>
   <div class="wrap">
     <div class="paths">
@@ -78,11 +78,11 @@ function home(){
     </div>
     ${acct ? `<section class="section" style="padding-bottom:0"><div class="card" style="display:flex;gap:20px;align-items:center;border-color:#cdd3f4;background:var(--blue-l)">
         <div class="av" style="width:56px;height:56px;font-size:1.4rem;background:var(--blue);color:var(--gold)">T</div>
-        <div style="flex:1"><h3 style="margin:0">Welcome back, ${acct.name}</h3><div class="small muted">Your school pricing is applied to every product. Your approved logos (${acct.logos}) are ready to use. Your rep is ${acct.rep}.</div></div>
+        <div style="flex:1"><h3 style="margin:0">Welcome back, ${acct.name}</h3><div class="small muted">Your school pricing is applied to every product. Your approved logos (${acct.logos}) are ready to use. Your rep is ${acct.rep}</div></div>
         <a class="btn pri" href="#/product/g5000">Reorder last shirt</a><a class="btn" href="#/design">Use my logos</a></div></section>`:''}
     <section class="section">
       <div class="sechead"><div><h2>Most popular</h2><div class="muted">What schools and teams order most. Start here.</div></div><a class="btn" href="#/catalog">See all products →</a></div>
-      <div class="grid g4">${pop.map(pcard).join('')}</div>
+      <div class="grid g4">${pop.map(p=>pcard(p,false)).join('')}</div>
     </section>
     <section class="section" id="how" style="padding-top:0">
       <h2>How it works</h2>
@@ -106,7 +106,7 @@ function catalog(){
     <div class="sechead"><div><h1 style="font-size:2rem">Products</h1><div class="muted">We show our popular picks first. The full SanMar and S&S catalogs (thousands of styles) are available through your rep or by search.</div></div>
       <input type="search" placeholder="Search style # or name (try PC54)" style="width:300px" oninput="toast('Search hits the live vendor catalog in the real build')"></div>
     <div class="chips" style="margin-bottom:20px">${cats.map(c=>`<button class="chip ${S.cat===c?'on':''}" onclick="S.cat='${c}';render()">${c}</button>`).join('')}</div>
-    <div class="grid g4">${list.map(pcard).join('')}</div>
+    <div class="grid g4">${list.map(p=>pcard(p,S.cat!=='Popular')).join('')}</div>
     <div class="info" style="margin-top:22px">💡 Can't find it? Our full catalog includes every SanMar and S&S style. <a href="#/how">Ask us</a> and we'll add it to your quote.</div>
   </div>`;
 }
@@ -127,12 +127,13 @@ function product(id){
   const ti = tierIdx(qty);
   const spUnder = qty<12 && locs.some(l=>l.method==='sp');
   const viewZones = zones[S.pd.view];
+  const overlap = S.pd.locs.ff && (S.pd.locs.lc || S.pd.locs.rc);
   return `${shopHeader('cat')}<div class="wrap">
   <div class="crumbs"><a href="#/">Shop</a> / <a href="#/catalog">${p.cat}</a> / ${p.brand} ${p.style}</div>
   <div class="pd">
     <div class="stage">
       <div class="canvas" id="stage">${garment(p.type,col.hex,S.pd.view,440)}
-        ${viewZones.map(z=>{ const on = S.pd.locs[z.id]; return `<div style="position:absolute;left:${z.x}%;top:${z.y}%;width:${z.w}%;height:${z.h}%;border:2px dashed ${on?'var(--blue)':'rgba(26,43,143,.25)'};background:${on?'rgba(255,210,60,.35)':'transparent'};border-radius:4px;display:grid;place-items:center;font-size:.7rem;font-weight:700;color:var(--blue);cursor:pointer;text-align:center" onclick="toggleLoc('${z.id}')">${on?'YOUR LOGO':''}</div>`;}).join('')}
+        ${viewZones.map(z=>{ const on = S.pd.locs[z.id]; return `<div style="position:absolute;left:${z.x}%;top:${z.y}%;width:${z.w}%;height:${z.h}%;border:2px dashed ${on?'#FFD23C':'#fff'};outline:1px solid ${on?'#7a5c00':'rgba(26,43,143,.45)'};background:${on?'rgba(255,210,60,.35)':'rgba(255,255,255,.08)'};border-radius:4px;display:grid;place-items:center;font-size:.7rem;font-weight:700;color:var(--blue);cursor:pointer;text-align:center" onclick="toggleLoc('${z.id}')">${on?'YOUR LOGO':''}</div>`;}).join('')}
       </div>
       <div class="views"><button class="btn sm ${S.pd.view==='front'?'pri':''}" onclick="S.pd.view='front';render()">Front</button><button class="btn sm ${S.pd.view==='back'?'pri':''}" onclick="S.pd.view='back';render()">Back</button></div>
       <div class="small muted" style="text-align:center;margin-top:8px">Dashed boxes are the print areas our shop allows on this product. Click one to add it.</div>
@@ -152,6 +153,7 @@ function product(id){
           <select onchange="S.pd.locs['${l.zone}'].method=this.value;render()">${z.methods.map(m=>`<option value="${m}" ${l.method===m?'selected':''}>${METHODS[m]}</option>`).join('')}</select>
           ${l.method==='sp'?`<select onchange="S.pd.locs['${l.zone}'].colors=+this.value;render()">${[1,2,3,4,5,6].map(n=>`<option value="${n}" ${l.colors===n?'selected':''}>${n} ink color${n>1?'s':''}</option>`).join('')}</select>`:''}
           ${l.method==='emb'?'<span class="tiny muted">Up to 8,000 stitches</span>':''}${l.method==='dtf'?'<span class="tiny muted">Unlimited colors, great for photos</span>':''}</div>`;}).join('')}
+        ${overlap?`<div class="hint" style="margin-top:12px">Full front and chest prints overlap on the shirt. Most orders pick one or the other. Our art team checks placement on your proof.</div>`:''}
         ${spUnder?`<div class="hint" style="margin-top:12px">Screen printing starts at 12 pieces. For smaller orders, choose <b>Full-color transfer</b>.</div>`:''}
       </div>
 
@@ -229,13 +231,13 @@ function designer(){
           ? `<img class="el ${e.id===S.des.sel?'sel':''}" data-id="${e.id}" src="${e.src}" style="left:${e.x}%;top:${e.y}%;width:${e.size*2.2}px;transform:translate(-50%,-50%)">`
           : `<div class="el ${e.id===S.des.sel?'sel':''}" data-id="${e.id}" style="left:${e.x}%;top:${e.y}%;font-family:${e.font};font-size:${e.size}px;color:${e.color};transform:translate(-50%,-50%);text-shadow:0 1px 0 rgba(0,0,0,.25)">${e.text}</div>`).join('')}
       </div>
-      <div class="flex between small muted" style="margin-top:10px"><span>Drag items to move them. ${p.brand} ${p.style} in ${col.name}.</span><span>${S.des.els.length} item(s)</span></div>
+      <div class="flex between small muted" style="margin-top:10px"><span>Drag items to move them. ${p.brand} ${p.style} in ${col.name}.</span><span>${S.des.els.length} item${S.des.els.length===1?'':'s'}</span></div>
     </div>
     <div>
       <div class="card"><h3>Selected item</h3>
         ${sel ? (sel.kind==='img' ? `<div class="field">Size<input type="range" min="10" max="60" value="${sel.size}" onchange="selEl().size=+this.value;render()"></div>`
         : `<div class="col">
-            <div class="field">Text<input type="text" value="${sel.text}" oninput="selEl().text=this.value;renderKeep(this)"></div>
+            <div class="field">Text<input type="text" value="${q_(sel.text)}" oninput="selEl().text=this.value;renderKeep(this)"></div>
             <div class="field">Font<select onchange="selEl().font=this.value;render()">${['Impact, sans-serif','Georgia, serif','Arial Black, sans-serif','Brush Script MT, cursive','Courier New, monospace'].map(f=>`<option value="${f}" ${sel.font===f?'selected':''}>${f.split(',')[0]}</option>`).join('')}</select></div>
             <div class="field">Size<input type="range" min="10" max="60" value="${sel.size}" onchange="selEl().size=+this.value;render()"></div>
             <div class="field">Ink color<div class="swatches">${['#ffffff','#1d1d22','#FFD23C','#1A2B8F','#c8202f','#1f5a3a','#ea6a1f'].map(h=>`<div class="sw ${sel.color===h?'on':''}" style="background:${h}" onclick="selEl().color='${h}';render()"></div>`).join('')}</div></div>

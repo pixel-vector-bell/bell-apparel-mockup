@@ -10,10 +10,10 @@ const pick = (...k) => k.map(x => ({ key:x, name:C[x][0], hex:C[x][1] }));
 const Z = {
   tee: {
     front:[
-      {id:'ff', name:'Full front', x:33,y:29,w:34,h:36, maxIn:'12" × 14"', methods:['sp','dtf']},
-      {id:'lc', name:'Left chest', x:56,y:29,w:12,h:11, maxIn:'4" × 4"', methods:['sp','emb','dtf']},
-      {id:'rc', name:'Right chest', x:32,y:29,w:12,h:11, maxIn:'4" × 4"', methods:['emb','dtf']},
-      {id:'ls', name:'Left sleeve', x:80,y:26,w:9,h:9, maxIn:'3" × 3"', methods:['sp','emb']},
+      {id:'ff', name:'Full front', x:34,y:33,w:32,h:38, maxIn:'12" × 14"', methods:['sp','dtf']},
+      {id:'lc', name:'Left chest', x:57,y:26,w:10,h:10, maxIn:'4" × 4"', methods:['sp','emb','dtf']},
+      {id:'rc', name:'Right chest', x:33,y:26,w:10,h:10, maxIn:'4" × 4"', methods:['emb','dtf']},
+      {id:'ls', name:'Left sleeve', x:79,y:27,w:8,h:8, maxIn:'3" × 3"', methods:['sp','emb']},
     ],
     back:[
       {id:'fb', name:'Full back', x:33,y:24,w:34,h:42, maxIn:'12" × 16"', methods:['sp','dtf']},
@@ -25,29 +25,29 @@ const Z = {
 };
 
 const PRODUCTS = [
-  {id:'g5000', style:'5000', brand:'Gildan', name:'Heavy Cotton T-Shirt', vendor:'S&S', cat:'T-shirts', type:'tee', cost:2.92, popular:1, sold:4120,
+  {id:'g5000', hero:'navy', style:'5000', brand:'Gildan', name:'Heavy Cotton T-Shirt', vendor:'S&S', cat:'T-shirts', type:'tee', cost:2.92, popular:1, sold:4120,
    colors:pick('white','black','navy','royal','red','maroon','forest','gold','ash','orange','purple'), desc:'5.3 oz, 100% cotton. The go-to for spirit wear, events, and teams.'},
-  {id:'pc54', style:'PC54', brand:'Port & Company', name:'Core Cotton Tee', vendor:'SanMar', cat:'T-shirts', type:'tee', cost:3.06, popular:1, sold:2980,
+  {id:'pc54', hero:'red', style:'PC54', brand:'Port & Company', name:'Core Cotton Tee', vendor:'SanMar', cat:'T-shirts', type:'tee', cost:3.06, popular:1, sold:2980,
    colors:pick('white','black','navy','royal','red','ash','charcoal','forest'), desc:'5.4 oz, 100% cotton. Budget-friendly classic.'},
-  {id:'bc3001', style:'3001', brand:'Bella+Canvas', name:'Unisex Jersey Tee', vendor:'S&S', cat:'T-shirts', type:'tee', cost:3.98, popular:1, sold:2410,
+  {id:'bc3001', hero:'maroon', style:'3001', brand:'Bella+Canvas', name:'Unisex Jersey Tee', vendor:'S&S', cat:'T-shirts', type:'tee', cost:3.98, popular:1, sold:2410,
    colors:pick('white','black','navy','charcoal','maroon','sand','blossom'), desc:'4.2 oz, soft retail fit. Great for retail and staff shirts.'},
-  {id:'g18500', style:'18500', brand:'Gildan', name:'Heavy Blend Hooded Sweatshirt', vendor:'S&S', cat:'Hoodies & sweats', type:'hoodie', cost:11.48, popular:1, sold:1860,
+  {id:'g18500', hero:'ash', style:'18500', brand:'Gildan', name:'Heavy Blend Hooded Sweatshirt', vendor:'S&S', cat:'Hoodies & sweats', type:'hoodie', cost:11.48, popular:1, sold:1860,
    colors:pick('black','navy','royal','red','maroon','ash','charcoal','forest','gold'), desc:'8 oz, 50/50 blend. Our best-selling hoodie.'},
-  {id:'st350', style:'ST350', brand:'Sport-Tek', name:'PosiCharge Competitor Tee', vendor:'SanMar', cat:'Performance', type:'tee', cost:5.24, popular:1, sold:1530,
+  {id:'st350', hero:'royal', style:'ST350', brand:'Sport-Tek', name:'PosiCharge Competitor Tee', vendor:'SanMar', cat:'Performance', type:'tee', cost:5.24, popular:1, sold:1530,
    colors:pick('white','black','navy','royal','red','gold','orange','purple','forest'), desc:'3.8 oz moisture-wicking polyester. Ideal for teams and PE.'},
-  {id:'k500', style:'K500', brand:'Port Authority', name:'Silk Touch Polo', vendor:'SanMar', cat:'Polos', type:'polo', cost:12.62, popular:1, sold:980,
+  {id:'k500', hero:'forest', style:'K500', brand:'Port Authority', name:'Silk Touch Polo', vendor:'SanMar', cat:'Polos', type:'polo', cost:12.62, popular:1, sold:980,
    colors:pick('white','black','navy','royal','red','maroon','forest'), desc:'5 oz, wrinkle resistant. Staff and coaches polo.'},
-  {id:'r112', style:'112', brand:'Richardson', name:'Trucker Snapback Cap', vendor:'S&S', cat:'Hats', type:'hat', cost:5.86, popular:1, sold:870,
+  {id:'r112', hero:'charcoal', style:'112', brand:'Richardson', name:'Trucker Snapback Cap', vendor:'S&S', cat:'Hats', type:'hat', cost:5.86, popular:1, sold:870,
    colors:pick('black','navy','charcoal','red','royal'), desc:'Classic structured trucker. Embroidery only.'},
-  {id:'cc1717', style:'1717', brand:'Comfort Colors', name:'Garment-Dyed Heavyweight Tee', vendor:'S&S', cat:'T-shirts', type:'tee', cost:6.42, popular:1, sold:760,
+  {id:'cc1717', hero:'sand', style:'1717', brand:'Comfort Colors', name:'Garment-Dyed Heavyweight Tee', vendor:'S&S', cat:'T-shirts', type:'tee', cost:6.42, popular:1, sold:760,
    colors:pick('white','black','navy','sand','blossom','pepper','maroon'), desc:'6.1 oz ring-spun cotton, vintage washed look.'},
-  {id:'g18000', style:'18000', brand:'Gildan', name:'Heavy Blend Crewneck Sweatshirt', vendor:'S&S', cat:'Hoodies & sweats', type:'crew', cost:8.96, popular:0, sold:540,
+  {id:'g18000', hero:'maroon', style:'18000', brand:'Gildan', name:'Heavy Blend Crewneck Sweatshirt', vendor:'S&S', cat:'Hoodies & sweats', type:'crew', cost:8.96, popular:0, sold:540,
    colors:pick('black','navy','ash','maroon','forest','gold'), desc:'8 oz, 50/50 blend crewneck.'},
-  {id:'pc78h', style:'PC78H', brand:'Port & Company', name:'Core Fleece Pullover Hoodie', vendor:'SanMar', cat:'Hoodies & sweats', type:'hoodie', cost:13.40, popular:0, sold:410,
+  {id:'pc78h', hero:'black', style:'PC78H', brand:'Port & Company', name:'Core Fleece Pullover Hoodie', vendor:'SanMar', cat:'Hoodies & sweats', type:'hoodie', cost:13.40, popular:0, sold:410,
    colors:pick('black','navy','royal','red','ash','charcoal'), desc:'7.8 oz fleece pullover hoodie.'},
-  {id:'st850', style:'ST850', brand:'Sport-Tek', name:'Sport-Wick Stretch 1/4-Zip', vendor:'SanMar', cat:'Performance', type:'qzip', cost:17.88, popular:0, sold:300,
+  {id:'st850', hero:'navy', style:'ST850', brand:'Sport-Tek', name:'Sport-Wick Stretch 1/4-Zip', vendor:'SanMar', cat:'Performance', type:'qzip', cost:17.88, popular:0, sold:300,
    colors:pick('black','navy','charcoal','royal'), desc:'Lightweight stretch 1/4-zip for coaches and staff.'},
-  {id:'dt6000', style:'DT6000', brand:'District', name:'Very Important Tee', vendor:'SanMar', cat:'T-shirts', type:'tee', cost:4.10, popular:0, sold:280,
+  {id:'dt6000', hero:'royal', style:'DT6000', brand:'District', name:'Very Important Tee', vendor:'SanMar', cat:'T-shirts', type:'tee', cost:4.10, popular:0, sold:280,
    colors:pick('white','black','navy','charcoal','royal','maroon'), desc:'4.3 oz ring-spun cotton, fashion fit.'},
 ];
 const SIZES = ['YS','YM','YL','S','M','L','XL','2XL','3XL'];
@@ -65,15 +65,15 @@ const MARKUP = { retail:1.00, school:0.60, rep:0.75, floor:0.40 };
 const SETUP = { screen:25, digitize:45, design:50 };
 
 const CUSTOMERS = [
-  {id:'tv', name:'Timpview High School', sub:'Football + Athletics', tier:'school', rep:'Kayla M.', colors:'Navy / Gold', logos:2, lastOrder:'2026-10-02'},
-  {id:'ls', name:'Lone Peak High School', sub:'PTSA + Spirit', tier:'school', rep:'Kayla M.', colors:'Black / Gold', logos:3, lastOrder:'2026-09-21'},
-  {id:'ae', name:'American Fork Elementary', sub:'Field day', tier:'school', rep:'Derek S.', colors:'Royal / Red', logos:1, lastOrder:'2026-05-11'},
-  {id:'ut', name:'Utah Valley Youth Soccer', sub:'Rec league', tier:'school', rep:'Derek S.', colors:'Red / White', logos:1, lastOrder:'2026-08-30'},
-  {id:'mc', name:'Mountain Credit Union', sub:'Corporate', tier:'retail', rep:'Kayla M.', colors:'Forest / White', logos:1, lastOrder:'2026-07-14'},
+  {id:'tv', name:'Timpview High School', sub:'Football + Athletics', tier:'school', rep:'Kayla Morgan', colors:'Navy / Gold', logos:2, lastOrder:'2026-10-02'},
+  {id:'ls', name:'Lone Peak High School', sub:'PTSA + Spirit', tier:'school', rep:'Kayla Morgan', colors:'Black / Gold', logos:3, lastOrder:'2026-09-21'},
+  {id:'ae', name:'American Fork Elementary', sub:'Field day', tier:'school', rep:'Derek Snow', colors:'Royal / Red', logos:1, lastOrder:'2026-05-11'},
+  {id:'ut', name:'Utah Valley Youth Soccer', sub:'Rec league', tier:'school', rep:'Derek Snow', colors:'Red / White', logos:1, lastOrder:'2026-08-30'},
+  {id:'mc', name:'Mountain Credit Union', sub:'Corporate', tier:'retail', rep:'Kayla Morgan', colors:'Forest / White', logos:1, lastOrder:'2026-07-14'},
 ];
 
 function tierIdx(q){ let i=0; TIERS.forEach((t,k)=>{ if(q>=t) i=k; }); return i; }
-function money(n){ return '$'+(Math.round(n*100)/100).toFixed(2); }
+function money(n){ return '$'+(Math.round(n*100)/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
 function money0(n){ return '$'+Math.round(n).toLocaleString(); }
 
 /** price one decoration location, per piece, at a quantity */
@@ -94,3 +94,6 @@ function quoteLine(p, q, locs, markup){
   const cost = p.cost + deco*0.45; // est. internal cost: blank + ink/thread/labor
   return { unit, blank, deco, setup, total: unit*q + setup, cost, margin: q? (unit*q+setup - cost*q)/(unit*q+setup) : 0 };
 }
+
+const heroC = p => p.colors.find(c=>c.key===p.hero) || p.colors[0];
+const q_ = s => String(s).replace(/"/g,'&quot;');

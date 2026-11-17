@@ -6,7 +6,7 @@ function repSide(on){
     <a href="#/rep/quotes" class="${on==='quotes'?'on':''}">📄 My quotes</a>
     <a href="#/rep/customers" class="${on==='cust'?'on':''}">🏫 My customers</a>
     <a href="#/catalog">🛍 Full catalog</a>
-    <div class="who"><div class="av">KM</div><div><b>Kayla M.</b><div class="tiny muted">Sales rep</div></div></div></aside>`;
+    <div class="who"><div class="av">KM</div><div><b>Kayla Morgan</b><div class="tiny muted">Sales rep</div></div></div></aside>`;
 }
 function repLineCalc(l){ const p=P(l.pid); return { p, q:quoteLine(p,l.qty,l.locs,S.rep.markup) }; }
 function rep(){
@@ -23,10 +23,10 @@ function rep(){
       <div class="col">
         <div class="card"><h3>1. Customer</h3>
           <select style="width:100%" onchange="S.rep.cust=this.value;render()">${CUSTOMERS.map(c=>`<option value="${c.id}" ${c.id===S.rep.cust?'selected':''}>${c.name} — ${c.sub}</option>`).join('')}<option>+ New customer…</option></select>
-          <div class="flex small muted" style="margin-top:10px;flex-wrap:wrap"><span class="tag blue">${cust.tier==='school'?'School pricing':'Standard pricing'}</span><span>Colors: ${cust.colors}</span><span>· ${cust.logos} logo(s) on file</span><span>· Last order ${cust.lastOrder}</span></div>
+          <div class="flex small muted" style="margin-top:10px;flex-wrap:wrap"><span class="tag blue">${cust.tier==='school'?'School pricing':'Standard pricing'}</span><span>Colors: ${cust.colors}</span><span>· ${cust.logos} logo${cust.logos===1?'':'s'} on file</span><span>· Last order ${cust.lastOrder}</span></div>
         </div>
         <div class="card"><h3>2. Add a product</h3><div class="small muted" style="margin-bottom:10px">Our 6 best sellers. Most quotes only need these.</div>
-          <div class="picklist">${starters.map(p=>`<div class="pick" onclick="addRepLine('${p.id}')"><div class="mini">${garment(p.type,p.colors[1]?p.colors[1].hex:p.colors[0].hex,'front',48)}</div><div><div style="font-weight:600;font-size:.9rem">${p.brand} ${p.style}</div><div class="tiny muted">${p.name}</div></div></div>`).join('')}</div>
+          <div class="picklist">${starters.map(p=>`<div class="pick" onclick="addRepLine('${p.id}')"><div class="mini">${garment(p.type,heroC(p).hex,'front',48)}</div><div><div style="font-weight:600;font-size:.9rem">${p.brand} ${p.style}</div><div class="tiny muted">${p.name}</div></div></div>`).join('')}</div>
           <div class="flex" style="margin-top:12px"><input type="search" placeholder="Need something else? Search all SanMar + S&S styles…" style="flex:1" oninput="toast('Searches the full vendor catalog in the real build')"></div>
         </div>
         <div class="card"><h3>3. Quote lines</h3>
@@ -36,7 +36,7 @@ function rep(){
             <div class="flex" style="margin-top:10px;flex-wrap:wrap">
               <div class="field">Color<select onchange="S.rep.lines[${i}].color=this.value;render()">${p.colors.map(c=>`<option value="${c.key}" ${c.key===l.color?'selected':''}>${c.name}</option>`).join('')}</select></div>
               <div class="field">Quantity<input type="number" min="1" value="${l.qty}" style="width:90px" onchange="S.rep.lines[${i}].qty=+this.value;render()"></div>
-              ${l.locs.map((loc,j)=>{ const z=zs.find(a=>a.id===loc.zone); return `<div class="field">${z.name}<div class="flex" style="gap:4px"><select onchange="S.rep.lines[${i}].locs[${j}].method=this.value;render()">${z.methods.map(m=>`<option value="${m}" ${m===loc.method?'selected':''}>${METHODS[m].split(' (')[0]}</option>`).join('')}</select>${loc.method==='sp'?`<select onchange="S.rep.lines[${i}].locs[${j}].colors=+this.value;render()">${[1,2,3,4,5,6].map(n=>`<option ${n===loc.colors?'selected':''}>${n}</option>`).join('')}</select>`:''}</div></div>`;}).join('')}
+              ${l.locs.map((loc,j)=>{ const z=zs.find(a=>a.id===loc.zone); return `<div class="field">${z.name}<div class="flex" style="gap:4px"><select onchange="S.rep.lines[${i}].locs[${j}].method=this.value;render()">${z.methods.map(m=>`<option value="${m}" ${m===loc.method?'selected':''}>${METHODS[m].split(' (')[0]}</option>`).join('')}</select>${loc.method==='sp'?`<select onchange="S.rep.lines[${i}].locs[${j}].colors=+this.value;render()">${[1,2,3,4,5,6].map(n=>`<option value="${n}" ${n===loc.colors?'selected':''}>${n} color${n>1?'s':''}</option>`).join('')}</select>`:''}</div></div>`;}).join('')}
               <div class="field">&nbsp;<select onchange="if(this.value){S.rep.lines[${i}].locs.push({zone:this.value,method:allZ('${l.pid}').find(a=>a.id===this.value).methods[0],colors:1});render()}"><option value="">+ Location</option>${zs.filter(z=>!l.locs.find(x=>x.zone===z.id)).map(z=>`<option value="${z.id}">${z.name}</option>`).join('')}</select></div>
             </div>
             <div class="flex between small" style="margin-top:8px"><span class="muted">${money(q.unit)} each${q.setup?` + ${money(q.setup)} setup`:''}${S.rep.showCost?` · cost ≈ ${money(q.cost)}/ea`:''}</span><b>${money(q.total)}</b></div>
@@ -51,7 +51,7 @@ function rep(){
           ${S.rep.showCost?`<div class="small flex between"><span>Gross margin</span><b style="color:${margin<.3?'var(--bad)':margin<.4?'var(--warn)':'var(--ok)'}">${Math.round(margin*100)}%</b></div>
             <div class="marginbar" style="margin:6px 0 12px"><i style="width:${Math.max(0,Math.min(100,margin*100))}%;background:${margin<.3?'var(--bad)':margin<.4?'var(--warn)':'var(--ok)'}"></i></div>
             <div class="field">Markup on blanks: ${Math.round(S.rep.markup*100)}% <input type="range" min="${MARKUP.floor*100}" max="120" value="${S.rep.markup*100}" onchange="S.rep.markup=this.value/100;render()"></div>
-            <div class="tiny muted">The floor (${Math.round(MARKUP.floor*100)}%) is set by the back office. Reps can't quote below it.</div>`:''}
+            <div class="tiny muted">Minimum markup (${Math.round(MARKUP.floor*100)}%) is set by the back office. Reps can't quote below it.</div>`:''}
         </div>
         <div class="card col">
           <button class="btn pri block" onclick="toast('Quote emailed to customer with an Approve + Pay link')">📧 Send to customer</button>
@@ -124,7 +124,7 @@ function adminProducts(){
     <table class="t" style="margin-top:10px"><tr><td><b>Gildan 64000</b> Softstyle T-Shirt</td><td>62 colors</td><td>S–5XL</td><td>Cost $2.71–$4.18</td><td class="num"><button class="btn sm pri" onclick="toast('Imported. Now set its print areas.');go('#/admin/product/g5000')">Import</button></td></tr>
     <tr><td><b>Gildan 64400</b> Softstyle Long Sleeve</td><td>24 colors</td><td>S–3XL</td><td>Cost $5.02–$6.88</td><td class="num"><button class="btn sm" onclick="toast('Imported')">Import</button></td></tr></table></div>
   <div class="card"><table class="t"><tr><th></th><th>Product</th><th>Vendor</th><th class="num">Cost (live)</th><th class="num">Retail from</th><th>Popular</th><th>Shown to</th><th>Print areas</th><th></th></tr>
-  ${PRODUCTS.map(p=>`<tr><td><div class="mini">${garment(p.type,p.colors[1]?p.colors[1].hex:p.colors[0].hex,'front',40)}</div></td><td><b>${p.brand} ${p.style}</b><div class="tiny muted">${p.name}</div></td><td>${p.vendor}</td><td class="num">${money(p.cost)}</td>
+  ${PRODUCTS.map(p=>`<tr><td><div class="mini">${garment(p.type,heroC(p).hex,'front',40)}</div></td><td><b>${p.brand} ${p.style}</b><div class="tiny muted">${p.name}</div></td><td>${p.vendor}</td><td class="num">${money(p.cost)}</td>
     <td class="num">${money(quoteLine(p,24,[{zone:'ff',method:'sp',colors:1}],MARKUP.retail).unit)}</td>
     <td><span class="toggle ${p.popular?'on':''}" onclick="P('${p.id}').popular=!P('${p.id}').popular;render()"></span></td>
     <td class="small">${p.popular?'Retail · Schools · Reps':'Reps only'}</td><td>${[...zonesFor(p).front,...zonesFor(p).back].length}</td><td class="num"><a href="#/admin/product/${p.id}">Edit</a></td></tr>`).join('')}</table></div></main></div>`;
@@ -133,7 +133,7 @@ function adminProduct(id){
   const p = P(id)||P('g5000'); S.zed.pid=p.id;
   const zones = zonesFor(p)[S.zed.view];
   const sel = zones.find(z=>z.id===S.zed.sel) || zones[0]; S.zed.sel = sel.id;
-  const col = p.colors[Math.min(2,p.colors.length-1)];
+  const col = heroC(p);
   return `<div class="app">${adminSide('zones')}<main class="main">
   <div class="top"><div><div class="small muted"><a href="#/admin/products">Products</a> / ${p.brand} ${p.style}</div><h2 style="margin:0">${p.name}</h2></div><div class="flex"><a class="btn" href="#/product/${p.id}">View on site</a><button class="btn pri" onclick="toast('Saved. Changes are live on the site.')">Save</button></div></div>
   <div class="tabs"><a>Details</a><a class="on">Print areas</a><a>Pricing</a><a>Visibility</a></div>
@@ -148,8 +148,8 @@ function adminProduct(id){
       ${zones.map(z=>`<div class="zone ${z.id===sel.id?'sel':''}" data-id="${z.id}" style="left:${z.x}%;top:${z.y}%;width:${z.w}%;height:${z.h}%"><span>${z.name}</span><div class="h"></div></div>`).join('')}</div>
       <div class="small muted" style="margin-top:8px;text-align:center">Drag a box to move it. Drag the corner to resize it.</div></div>
     <div class="card col"><h3>${sel.name}</h3>
-      <div class="field">Name<input type="text" value="${sel.name}" onchange="curZone().name=this.value;render()"></div>
-      <div class="field">Max print size<input type="text" value="${sel.maxIn}" onchange="curZone().maxIn=this.value;render()"></div>
+      <div class="field">Name<input type="text" value="${q_(sel.name)}" onchange="curZone().name=this.value;render()"></div>
+      <div class="field">Max print size<input type="text" value="${q_(sel.maxIn)}" onchange="curZone().maxIn=this.value;render()"></div>
       <div class="field">Allowed methods${Object.entries(METHODS).map(([k,v])=>`<label class="flex small" style="font-weight:400;gap:8px"><input type="checkbox" ${sel.methods.includes(k)?'checked':''} onchange="toggleMethod('${k}')"> ${v}</label>`).join('')}</div>
       <div class="field">Extra charge for this area<input type="text" value="$0.00"></div>
       <div class="field">Position (auto)<div class="tiny muted" style="font-weight:400">x ${Math.round(sel.x)}% · y ${Math.round(sel.y)}% · ${Math.round(sel.w)}% × ${Math.round(sel.h)}%</div></div>
