@@ -13,7 +13,7 @@ const Z = {
       {id:'ff', name:'Full front', x:34,y:33,w:32,h:38, maxIn:'12" × 14"', methods:['sp','dtf']},
       {id:'lc', name:'Left chest', x:57,y:26,w:10,h:10, maxIn:'4" × 4"', methods:['sp','emb','dtf']},
       {id:'rc', name:'Right chest', x:33,y:26,w:10,h:10, maxIn:'4" × 4"', methods:['emb','dtf']},
-      {id:'ls', name:'Left sleeve', x:79,y:27,w:8,h:8, maxIn:'3" × 3"', methods:['sp','emb']},
+      {id:'ls', name:'Left sleeve', x:78,y:29,w:8,h:8, maxIn:'3" × 3"', methods:['sp','emb']},
     ],
     back:[
       {id:'fb', name:'Full back', x:33,y:24,w:34,h:42, maxIn:'12" × 16"', methods:['sp','dtf']},
